@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+﻿import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -78,7 +78,8 @@ const DEFS: Record<string, { title: string; fields: Field[] }> = {
 })
 export class QuoteForm {
   private http = inject(HttpClient);
-  private product = inject(ActivatedRoute).snapshot.paramMap.get('product') ?? '';
+  private route = inject(ActivatedRoute).snapshot;
+  private product = (this.route.data['product'] as string | undefined) ?? this.route.paramMap.get('product') ?? '';
   def = DEFS[this.product];
   model: Record<string, string | number | undefined> = Object.fromEntries((this.def?.fields ?? []).map(f => [f.key, f.value]));
   busy = signal(false);
@@ -91,9 +92,10 @@ export class QuoteForm {
       this.result.set(await firstValueFrom(this.http.post<Quote>(`${API_URL}/api/quotes/${this.product}`, this.model)));
     } catch (e) {
       const err = e as HttpErrorResponse;
-      this.error.set(err.error?.error ?? 'Could not calculate the quote. Check your details.');
+      this.error.set(err.status === 403 ? 'You do not have permission to create this quote.' : (err.error?.error ?? err.error?.message ?? 'Could not calculate the quote. Check your details.'));
     } finally {
       this.busy.set(false);
     }
   }
 }
+

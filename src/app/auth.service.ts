@@ -1,12 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+﻿import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 export const API_URL = 'http://localhost:5080';
 
-export interface UserInfo { id: string; email: string; fullName: string; role: string; }
-export interface AuthResponse { accessToken: string; refreshToken: string; expiresAt: string; user: UserInfo; }
+export interface UserInfo { userId: string; username: string; displayName: string; role: string; permissions: string[]; }
+export interface AuthResponse { accessToken: string; refreshToken: string; expiresIn: number; user: UserInfo; }
+interface Envelope<T> { success: boolean; message: string; data: T; }
 
 const STORE_KEY = 'il.session';
 
@@ -21,24 +22,27 @@ export class AuthService {
 
   get accessToken(): string | null { return this.session()?.accessToken ?? null; }
 
-  async login(email: string, password: string) {
-    this.save(await firstValueFrom(this.http.post<AuthResponse>(`${API_URL}/api/auth/login`, { email, password })));
+  readonly role = computed(() => this.session()?.user.role ?? '');
+
+  has(permission: string): boolean { return this.session()?.user.permissions.includes(permission) ?? false; }
+  hasRole(...roles: string[]): boolean { return roles.includes(this.role()); }
+
+  private async call(path: string, body: object) {
+    const res = await firstValueFrom(this.http.post<Envelope<AuthResponse>>(`${API_URL}/api/v1/auth/${path}`, body));
+    this.save(res.data);
   }
 
-  async register(email: string, password: string, fullName: string) {
-    this.save(await firstValueFrom(this.http.post<AuthResponse>(`${API_URL}/api/auth/register`, { email, password, fullName })));
-  }
+  login(username: string, password: string) { return this.call('login', { username, password }); }
+  register(email: string, password: string, fullName: string) { return this.call('register', { email, password, fullName }); }
 
   /** One-time token handed over by another front end (e.g. the Flutter app). */
-  async exchangeHandoff(token: string) {
-    this.save(await firstValueFrom(this.http.post<AuthResponse>(`${API_URL}/api/auth/handoff/exchange`, { token })));
-  }
+  exchangeHandoff(token: string) { return this.call('handoff/exchange', { token }); }
 
   async refresh(): Promise<boolean> {
     const rt = this.session()?.refreshToken;
     if (!rt) return false;
     try {
-      this.save(await firstValueFrom(this.http.post<AuthResponse>(`${API_URL}/api/auth/refresh`, { refreshToken: rt })));
+      await this.call('refresh', { refreshToken: rt });
       return true;
     } catch {
       this.logout();
@@ -47,6 +51,8 @@ export class AuthService {
   }
 
   logout() {
+    const rt = this.session()?.refreshToken;
+    if (rt) this.http.post(`${API_URL}/api/v1/auth/logout`, { refreshToken: rt }).subscribe({ error: () => {} });
     this.session.set(null);
     try { localStorage.removeItem(STORE_KEY); } catch { /* storage unavailable */ }
     this.router.navigateByUrl('/login');
@@ -61,3 +67,4 @@ export class AuthService {
     try { return JSON.parse(localStorage.getItem(STORE_KEY) ?? 'null'); } catch { return null; }
   }
 }
+

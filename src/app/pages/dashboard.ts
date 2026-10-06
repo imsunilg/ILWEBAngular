@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+﻿import { HttpClient } from '@angular/common/http';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { API_URL } from '../auth.service';
+import { API_URL, AuthService } from '../auth.service';
 
 interface Product { id: number; code: string; name: string; description: string | null; }
 interface Quote { id: string; quoteNumber: string; status: string; productName: string; totalPremium: number; createdAt: string; expiresAt: string; }
@@ -12,9 +12,10 @@ interface Quote { id: string; quoteNumber: string; status: string; productName: 
   selector: 'app-dashboard',
   imports: [RouterLink, CurrencyPipe, DatePipe],
   template: `
-    <h2>Get a quote</h2>
+    <h2>{{ auth.user()?.role }} dashboard</h2>
+    @if (allowedProducts().length > 0) { <h2>Get a quote</h2> }
     <div class="grid">
-      @for (p of products() ?? []; track p.id) {
+      @for (p of allowedProducts(); track p.id) {
         <div class="card">
           <h3>{{ p.name }}</h3>
           <p>{{ p.description }}</p>
@@ -39,7 +40,11 @@ interface Quote { id: string; quoteNumber: string; status: string; productName: 
   `,
 })
 export class Dashboard {
+  protected auth = inject(AuthService);
   private http = inject(HttpClient);
   products = toSignal(this.http.get<Product[]>(`${API_URL}/api/products`));
+  /** Only products the signed-in user has permission to quote. */
+  allowedProducts = computed(() => (this.products() ?? []).filter(p => this.auth.has(`${p.code.toLowerCase()}.quote`)));
   quotes = toSignal(this.http.get<Quote[]>(`${API_URL}/api/quotes`));
 }
+
