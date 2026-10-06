@@ -1,16 +1,27 @@
-﻿import { Routes } from '@angular/router';
-import { authGuard, permissionGuard, roleGuard } from './auth.interceptor';
+import { Routes } from '@angular/router';
+import { authGuard, permissionGuard, roleGuard } from './core/auth.interceptor';
+import { STAFF_ROLES } from './core/config';
 
-const quote = () => import('./pages/quote-form').then(m => m.QuoteForm);
-// Travel and Liability are limited to staff roles and require the matching permission.
-const staff = ['AGENT', 'UNDERWRITER', 'MANAGER', 'ADMIN'];
-
+// Product modules only. Login, dashboard, header, profile and logout belong to the Flutter portal shell.
 export const routes: Routes = [
-  { path: 'login', loadComponent: () => import('./pages/login').then(m => m.Login) },
-  { path: 'handoff', loadComponent: () => import('./pages/handoff').then(m => m.Handoff) },
-  { path: '', pathMatch: 'full', canActivate: [authGuard], loadComponent: () => import('./pages/dashboard').then(m => m.Dashboard) },
-  { path: 'quote/travel', canActivate: [authGuard, roleGuard, permissionGuard], data: { roles: staff, permission: 'travel.quote', product: 'travel' }, loadComponent: quote },
-  { path: 'quote/liability', canActivate: [authGuard, roleGuard, permissionGuard], data: { roles: staff, permission: 'liability.quote', product: 'liability' }, loadComponent: quote },
-  { path: 'quote/:product', canActivate: [authGuard, permissionGuard], loadComponent: quote },
-  { path: '**', redirectTo: '' },
+  {
+    path: 'travel',
+    canActivate: [authGuard, roleGuard, permissionGuard],
+    data: { roles: STAFF_ROLES, permission: 'travel.quote' },
+    children: [
+      { path: '', loadComponent: () => import('./travel/pages/travel-pages').then(m => m.TravelQuotePage) },
+      { path: 'result', loadComponent: () => import('./travel/pages/travel-pages').then(m => m.TravelResultPage) },
+    ],
+  },
+  {
+    path: 'liability',
+    canActivate: [authGuard, roleGuard, permissionGuard],
+    data: { roles: STAFF_ROLES, permission: 'liability.quote' },
+    children: [
+      { path: '', loadComponent: () => import('./liability/pages/liability-pages').then(m => m.LiabilityQuotePage) },
+      { path: 'result', loadComponent: () => import('./liability/pages/liability-pages').then(m => m.LiabilityResultPage) },
+    ],
+  },
+  { path: 'forbidden', loadComponent: () => import('./shared/forbidden').then(m => m.Forbidden) },
+  { path: '**', redirectTo: 'forbidden' },
 ];
