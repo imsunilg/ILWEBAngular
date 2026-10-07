@@ -4,50 +4,54 @@
 
 label {
   display: block;
-  margin: 14px 0 0;
-  font-size: 0.75rem;
-  color: #44474f;
+  margin: 16px 0 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
 }
 
 input,
 select {
   width: 100%;
   box-sizing: border-box;
-  padding: 6px 0 8px;
+  padding: 12px 14px;
   font: inherit;
   color: inherit;
-  background: transparent;
-  border: 0;
-  border-bottom: 1px solid var(--outline);
-  border-radius: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   outline: none;
 }
 
 input:focus,
 select:focus {
-  border-bottom: 2px solid var(--primary);
-  margin-bottom: -1px;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
 .error {
   color: var(--error);
-  margin: 8px 0;
+  margin: 12px 0 0;
 }
 
 .primary {
   display: block;
   box-sizing: border-box;
   width: 100%;
-  margin-top: 20px;
-  padding: 10px 24px;
+  margin-top: 24px;
+  padding: 13px 28px;
   border: 0;
-  border-radius: 20px;
+  border-radius: 999px;
   background: var(--primary);
   color: var(--on-primary);
   font: inherit;
-  font-weight: 500;
+  font-weight: 600;
   text-align: center;
   cursor: pointer;
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--primary-dark);
 }
 
 .primary:disabled {
