@@ -18,7 +18,7 @@ Guards: auth, role (AGENT/UNDERWRITER/MANAGER/ADMIN) and permission (`travel.quo
 npm install
 npm start          # http://localhost:4200
 ```
-Opened directly it only shows "open it from the portal"; use the portal at http://localhost:8080.
+Opened directly it only shows "open it from the portal"; use the portal at http://localhost:8090.
 Allowed portal origins and the API URL are in `src/app/core/config.ts`.
 
 Tests: `ng test`. Build: `ng build`.
