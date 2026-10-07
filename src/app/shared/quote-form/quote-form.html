@@ -1,0 +1,21 @@
+<section class="module">
+  <h2>{{ def().title }}</h2>
+  <form (ngSubmit)="submit()">
+    @for (f of def().fields; track f.key) {
+      <label [for]="f.key">{{ f.label }}</label>
+      @if (f.type === 'select') {
+        <select [id]="f.key" [name]="f.key" [(ngModel)]="model[f.key]">
+          @for (o of f.options; track o[0]) {
+            <option [value]="o[0]">{{ o[1] }}</option>
+          }
+        </select>
+      } @else {
+        <input [id]="f.key" [name]="f.key" [type]="f.type" [(ngModel)]="model[f.key]" required />
+      }
+    }
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    <button type="submit" class="primary" [disabled]="busy()">Get quote</button>
+  </form>
+</section>

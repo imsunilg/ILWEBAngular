@@ -1,27 +1,38 @@
-/* Module styling aligned with the Flutter portal (Material 3 look, seed colour 0B3D91). No page chrome. */
-:root { --primary: #475e92; --on-primary: #fff; --surface: #faf8ff; --outline: #757780; --error: #ba1a1a; }
-html, body { margin: 0; min-height: 100%; background: var(--surface); }
-body { font-family: Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif; color: #1a1b21; }
-
-.module { max-width: 520px; margin: 0 auto; padding: 24px 16px; }
-.module h2 { font-weight: 400; font-size: 1.5rem; margin: 0 0 12px; }
-.muted { color: #44474f; }
-.error { color: var(--error); margin: 8px 0; }
-
-label { display: block; margin: 14px 0 0; font-size: .75rem; color: #44474f; }
-input, select {
-  width: 100%; box-sizing: border-box; padding: 6px 0 8px; font: inherit; color: inherit;
-  background: transparent; border: 0; border-bottom: 1px solid var(--outline); border-radius: 0; outline: none;
+/* Global tokens and page basics only; component styles live next to each component (*.css).
+   Look aligned with the Flutter portal (Material 3, seed colour 0B3D91). No page chrome. */
+:root {
+  --primary: #475e92;
+  --on-primary: #fff;
+  --surface: #faf8ff;
+  --outline: #757780;
+  --error: #ba1a1a;
 }
-input:focus, select:focus { border-bottom: 2px solid var(--primary); margin-bottom: -1px; }
 
-.primary, button.primary {
-  display: block; box-sizing: border-box; width: 100%; margin-top: 20px; padding: 10px 24px; border: 0; border-radius: 20px;
-  background: var(--primary); color: var(--on-primary); font: inherit; font-weight: 500; text-align: center;
-  text-decoration: none; cursor: pointer;
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--surface);
 }
-button.primary:disabled { opacity: .6; cursor: default; }
 
-.card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0, 0, 0, .15); }
-.card p { margin: 6px 0; }
-.total { font-size: 1.4rem; }
+body {
+  font-family: Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: #1a1b21;
+}
+
+/* shared layout classes used by every module page */
+.module {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.module h2 {
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 0 0 12px;
+}
+
+.muted {
+  color: #44474f;
+}

@@ -9,6 +9,8 @@ src/app/
   shared/      quote form + result, forbidden page, field models
   core/        config (API URL, allowed portal origins), session/handoff service, interceptor, guards
 ```
+Every component is split into three files in its own folder: `name.ts` (logic), `name.html` (template) and `name.css` (styles), e.g. `shared/quote-form/quote-form.{ts,html,css}`, `travel/pages/travel-quote/travel-quote.{ts,html,css}`. Global styles (colour tokens, `.module`) are only in `src/styles.css`.
+
 Guards: auth, role (AGENT/UNDERWRITER/MANAGER/ADMIN) and permission (`travel.quote`, `liability.quote`); the API enforces them again.
 
 ## Run

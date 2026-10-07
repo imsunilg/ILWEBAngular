@@ -9,8 +9,14 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard, permissionGuard],
     data: { roles: STAFF_ROLES, permission: 'travel.quote' },
     children: [
-      { path: '', loadComponent: () => import('./travel/pages/travel-pages').then(m => m.TravelQuotePage) },
-      { path: 'result', loadComponent: () => import('./travel/pages/travel-pages').then(m => m.TravelResultPage) },
+      {
+        path: '',
+        loadComponent: () => import('./travel/pages/travel-quote/travel-quote').then(m => m.TravelQuotePage),
+      },
+      {
+        path: 'result',
+        loadComponent: () => import('./travel/pages/travel-result/travel-result').then(m => m.TravelResultPage),
+      },
     ],
   },
   {
@@ -18,10 +24,16 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard, permissionGuard],
     data: { roles: STAFF_ROLES, permission: 'liability.quote' },
     children: [
-      { path: '', loadComponent: () => import('./liability/pages/liability-pages').then(m => m.LiabilityQuotePage) },
-      { path: 'result', loadComponent: () => import('./liability/pages/liability-pages').then(m => m.LiabilityResultPage) },
+      {
+        path: '',
+        loadComponent: () => import('./liability/pages/liability-quote/liability-quote').then(m => m.LiabilityQuotePage),
+      },
+      {
+        path: 'result',
+        loadComponent: () => import('./liability/pages/liability-result/liability-result').then(m => m.LiabilityResultPage),
+      },
     ],
   },
-  { path: 'forbidden', loadComponent: () => import('./shared/forbidden').then(m => m.Forbidden) },
+  { path: 'forbidden', loadComponent: () => import('./shared/forbidden/forbidden').then(m => m.Forbidden) },
   { path: '**', redirectTo: 'forbidden' },
 ];

@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+label {
+  display: block;
+  margin: 14px 0 0;
+  font-size: 0.75rem;
+  color: #44474f;
+}
+
+input,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 0 8px;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--outline);
+  border-radius: 0;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-bottom: 2px solid var(--primary);
+  margin-bottom: -1px;
+}
+
+.error {
+  color: var(--error);
+  margin: 8px 0;
+}
+
+.primary {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px 24px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font: inherit;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
